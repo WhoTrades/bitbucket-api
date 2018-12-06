@@ -1,0 +1,1 @@
+Bitbucket Server client with object-oriented response

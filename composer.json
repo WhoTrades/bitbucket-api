@@ -1,0 +1,16 @@
+{
+  "name": "whotrades/bitbucket-api",
+  "type": "library",
+  "author": "Anton Gorlanov (antonxacc@gmail.com)",
+  "description": "Bitbucket Server client with object-oriented response",
+  "autoload": {
+    "psr-4": {
+      "whotrades\\BitbucketApi\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.0",
+    "psr/log": "~1.0",
+    "guzzlehttp/guzzle": "^6.3"
+  }
+}
