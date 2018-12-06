@@ -73,7 +73,7 @@ abstract class Base
      * @param array | null $parameters
      * @param bool | null $getAllPages
      *
-     * @return \Generator | Entity\Base[]
+     * @return \Generator of Entity\Base
      *
      * @throws Exception\JsonInvalidException
      * @throws Exception\ResourceIdRequiredException

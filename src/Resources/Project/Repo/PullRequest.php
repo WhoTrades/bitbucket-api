@@ -9,6 +9,9 @@ use \whotrades\BitbucketApi\Entity;
 
 class PullRequest extends Base
 {
+    const DIRECTION_INCOMING = 'INCOMING';
+    const DIRECTION_OUTGOING = 'OUTGOING';
+
     protected static $resourceBaseUrl = 'pull-requests';
 
     /**
@@ -41,6 +44,25 @@ class PullRequest extends Base
     public function getParticipant()
     {
         return new PullRequest\Participant($this->client, null, $this);
+    }
+
+    /**
+     * @param string $branch
+     *
+     * @return \Generator of Entity\Base
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \whotrades\BitbucketApi\Exception\JsonInvalidException
+     * @throws \whotrades\BitbucketApi\Exception\ResourceIdRequiredException
+     */
+    public function getListByBranch($branch)
+    {
+        $parameters = [
+            'at' => "refs/heads/{$branch}",
+            'direction' => self::DIRECTION_OUTGOING,
+        ];
+
+        yield $this->getList($parameters);
     }
 
     /**
