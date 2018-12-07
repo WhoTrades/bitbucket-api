@@ -35,9 +35,12 @@ class Diff extends Base
 
         $response = new ResponseDiff($this->sendRequest($url, 'GET', $parameters));
 
+        $result = [];
         foreach ($response->getDiffs() as $diff) {
-            yield new $entityClass($diff);
+            $result[] = new $entityClass($diff);
         }
+
+        return $result;
     }
 
     /**

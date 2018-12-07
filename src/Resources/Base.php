@@ -73,7 +73,7 @@ abstract class Base
      * @param array | null $parameters
      * @param bool | null $getAllPages
      *
-     * @return \Generator of Entity\Base
+     * @return Entity\Base[]
      *
      * @throws Exception\JsonInvalidException
      * @throws Exception\ResourceIdRequiredException
@@ -88,14 +88,17 @@ abstract class Base
         $url = $this->getPath(null, $useResourceId = false);
         $parameters = $parameters ?? [];
 
+        $result = [];
         do {
             $response = new ResponsePaged($this->sendRequest($url, 'GET', $parameters));
 
             foreach ($response->getValues() as $value) {
-                yield new $entityClass($value);
+                $result[] = new $entityClass($value);
             }
             $parameters['start'] = $response->getNextPageStart();
         } while (!$response->isLastPage() && $getAllPages);
+
+        return $result;
     }
 
     /**

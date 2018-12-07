@@ -49,7 +49,7 @@ class PullRequest extends Base
     /**
      * @param string $branch
      *
-     * @return \Generator of Entity\Base
+     * @return Entity\Base[]
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \whotrades\BitbucketApi\Exception\JsonInvalidException
@@ -62,7 +62,7 @@ class PullRequest extends Base
             'direction' => self::DIRECTION_OUTGOING,
         ];
 
-        yield $this->getList($parameters);
+        return $this->getList($parameters);
     }
 
     /**
