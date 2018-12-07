@@ -6,6 +6,9 @@ namespace whotrades\BitbucketApi\Entity;
 
 class PullRequest extends Base
 {
+    const STATUS_NEEDS_WORK = 'NEEDS_WORK';
+    const STATUS_APPROVED = 'APPROVED';
+
     protected $id;
     protected $version;
     protected $title;
