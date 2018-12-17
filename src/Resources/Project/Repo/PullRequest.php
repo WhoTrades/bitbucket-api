@@ -15,11 +15,11 @@ class PullRequest extends Base
     protected static $resourceBaseUrl = 'pull-requests';
 
     /**
-     * @return PullRequest\Commit
+     * @return Commit
      */
     public function getCommit()
     {
-        return new PullRequest\Commit($this->client, null, $this);
+        return new Commit($this->client, null, $this);
     }
 
     /**

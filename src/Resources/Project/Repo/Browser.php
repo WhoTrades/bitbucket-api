@@ -100,7 +100,7 @@ class Browser extends Base
      *
      * @throws Exception\MethodIsNotAcceptable
      */
-    public function getList($parameters = null, $getAllPages = null)
+    public function getList($parameters = null)
     {
         throw new Exception\MethodIsNotAcceptable(__METHOD__);
     }

@@ -26,7 +26,7 @@ class Diff extends Base
     /**
      * {@inheritdoc}
      */
-    public function getList($parameters = null, $getAllPages = null)
+    public function getList($parameters = null)
     {
         $entityClass = $this->getEntityClass();
 

@@ -23,7 +23,7 @@ class Commit extends CommitBase
     protected $message;
 
     /**
-     * @var Commit[]
+     * @var CommitBase[]
      */
     protected $parents;
     protected $properties;
@@ -89,7 +89,7 @@ class Commit extends CommitBase
     }
 
     /**
-     * @return mixed
+     * @return CommitBase[]
      */
     public function getParents()
     {
@@ -97,10 +97,18 @@ class Commit extends CommitBase
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getProperties()
     {
         return $this->properties;
+    }
+
+    /**
+     * @return string | null
+     */
+    public function getJiraKey()
+    {
+        return $this->properties['jira-key'][0] ?? null;
     }
 }

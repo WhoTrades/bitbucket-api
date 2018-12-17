@@ -71,7 +71,6 @@ abstract class Base
 
     /**
      * @param array | null $parameters
-     * @param bool | null $getAllPages
      *
      * @return Entity\Base[]
      *
@@ -79,9 +78,9 @@ abstract class Base
      * @throws Exception\ResourceIdRequiredException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getList($parameters = null, $getAllPages = null)
+    public function getList($parameters = null)
     {
-        $getAllPages = $getAllPages ?? true;
+        $getAllPages = isset($parameters['limit']) ? false : true;
 
         $entityClass = $this->getEntityClass();
 
@@ -120,7 +119,7 @@ abstract class Base
             $response = new ResponsePaged($this->sendRequest($url, 'GET', $parameters));
             $count += $response->getSize();
             $parameters['start'] = $response->getNextPageStart();
-        } while (!$response->isLastPage());
+        } while (!$response->isLastPage() && $count < $parameters['limit']);
 
         return $count;
     }

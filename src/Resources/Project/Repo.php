@@ -29,6 +29,30 @@ class Repo extends Base
     }
 
     /**
+     * @return Repo\Commit
+     */
+    public function getCommit()
+    {
+        return new Repo\Commit($this->client, null, $this);
+    }
+
+    /**
+     * @return Repo\Branch
+     */
+    public function getBranch()
+    {
+        return new Repo\Branch($this->client, null, $this);
+    }
+
+    /**
+     * @return Repo\Compare\Commit
+     */
+    public function getCompareCommit()
+    {
+        return new Repo\Compare\Commit($this->client, null, $this);
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getEntityClass()
