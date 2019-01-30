@@ -220,4 +220,20 @@ class PullRequest extends Base
 
         return null;
     }
+
+    /**
+     * @return User[]
+     */
+    public function getNeedsWorkUserList()
+    {
+        $needsWorkUserList = [];
+        /** @var PullRequest\Participant $reviewer */
+        foreach ($this->getReviewers() as $reviewer) {
+            if ($reviewer->getStatus() === self::STATUS_NEEDS_WORK) {
+                $needsWorkUserList[$reviewer->getUser()->getId()] = $reviewer->getUser();
+            }
+        }
+
+        return $needsWorkUserList;
+    }
 }

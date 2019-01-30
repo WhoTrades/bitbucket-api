@@ -31,6 +31,14 @@ class PullRequest extends Base
     }
 
     /**
+     * @return PullRequest\Merge
+     */
+    public function getMerge()
+    {
+        return new PullRequest\Merge($this->client, null, $this);
+    }
+
+    /**
      * @return PullRequest\Diff
      */
     public function getDiff()
@@ -63,6 +71,26 @@ class PullRequest extends Base
         ];
 
         return $this->getList($parameters);
+    }
+
+    /**
+     * @param string $branch
+     *
+     * @return bool
+     */
+    public function isConflicted($branch)
+    {
+        $pullRequestList = $this->getListByBranch($branch);
+
+        $conflicted = false;
+        /** @var \whotrades\BitbucketApi\Entity\PullRequest $pullRequest */
+        foreach ($pullRequestList as $pullRequest) {
+            /** @var \whotrades\BitbucketApi\Entity\PullRequest\Merge $mergeEntity */
+            $mergeEntity = $this->parentResource->getPullRequest($pullRequest->getId())->getMerge()->getEntity();
+            $conflicted = $conflicted || $mergeEntity->isConflicted();
+        }
+
+        return $conflicted;
     }
 
     /**
