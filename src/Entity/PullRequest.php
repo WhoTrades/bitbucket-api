@@ -4,8 +4,12 @@
  */
 namespace whotrades\BitbucketApi\Entity;
 
+use \DateTime;
+
 class PullRequest extends Base
 {
+    use Traits\WithDateTimeTrait;
+
     const STATUS_NEEDS_WORK = 'NEEDS_WORK';
     const STATUS_APPROVED = 'APPROVED';
 
@@ -16,8 +20,16 @@ class PullRequest extends Base
     protected $state;
     protected $open;
     protected $closed;
-    protected $createdDate;
-    protected $updatedDate;
+
+    /**
+     * @var DateTime
+     */
+    protected $createdDateTime;
+
+    /**
+     * @var DateTime
+     */
+    protected $updatedDateTime;
 
     /**
      * @var Ref
@@ -56,8 +68,8 @@ class PullRequest extends Base
         $this->state = $data['state'];
         $this->open = $data['open'];
         $this->closed = $data['closed'];
-        $this->createdDate = $data['createdDate'];
-        $this->updatedDate = $data['updatedDate'];
+        $this->createdDateTime = $this->createDateTimeByMillisecond($data['createdDate']);
+        $this->updatedDateTime = $this->createDateTimeByMillisecond($data['updatedDate']);
         $this->fromRef = new Ref($data['fromRef']);
         $this->toRef = new Ref($data['toRef']);
         $this->locked = $data['locked'];
@@ -130,19 +142,19 @@ class PullRequest extends Base
     }
 
     /**
-     * @return mixed
+     * @return DateTime
      */
-    public function getCreatedDate()
+    public function getCreatedDateTime()
     {
-        return $this->createdDate;
+        return $this->createdDateTime;
     }
 
     /**
-     * @return mixed
+     * @return DateTime
      */
-    public function getUpdatedDate()
+    public function getUpdatedDateTime()
     {
-        return $this->updatedDate;
+        return $this->updatedDateTime;
     }
 
     /**

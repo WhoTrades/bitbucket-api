@@ -6,20 +6,31 @@ namespace whotrades\BitbucketApi\Entity;
 
 use whotrades\BitbucketApi\Entity\Commit\Committer;
 use whotrades\BitbucketApi\Entity\Commit\Base as CommitBase;
+use \DateTime;
 
 class Commit extends CommitBase
 {
+    use Traits\WithDateTimeTrait;
+
     /**
      * @var Committer
      */
     protected $author;
-    protected $authorTimestamp;
+
+    /**
+     * @var DateTime
+     */
+    protected $authorDateTime;
 
     /**
      * @var Committer
      */
     protected $committer;
-    protected $committerTimestamp;
+
+    /**
+     * @var DateTime
+     */
+    protected $committerDateTime;
     protected $message;
 
     /**
@@ -35,9 +46,9 @@ class Commit extends CommitBase
     {
         parent::init($data);
         $this->author = new Committer($data['author']);
-        $this->authorTimestamp = $data['authorTimestamp'];
+        $this->authorDateTime = $this->createDateTimeByMillisecond($data['authorTimestamp']);
         $this->committer = new Committer($data['committer']);
-        $this->committerTimestamp = $data['committerTimestamp'];
+        $this->committerDateTime = $this->createDateTimeByMillisecond($data['committerTimestamp']);
         $this->message = $data['message'];
         $this->parents = array_map(
             function ($item) {
@@ -57,11 +68,11 @@ class Commit extends CommitBase
     }
 
     /**
-     * @return mixed
+     * @return DateTime
      */
-    public function getAuthorTimestamp()
+    public function getAuthorDateTime()
     {
-        return $this->authorTimestamp;
+        return $this->authorDateTime;
     }
 
     /**
@@ -73,11 +84,11 @@ class Commit extends CommitBase
     }
 
     /**
-     * @return mixed
+     * @return DateTime
      */
-    public function getCommitterTimestamp()
+    public function getCommitterDateTime()
     {
-        return $this->committerTimestamp;
+        return $this->committerDateTime;
     }
 
     /**
