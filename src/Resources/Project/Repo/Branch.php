@@ -36,9 +36,37 @@ class Branch extends Base
      * @throws Exception\ResourceIdRequiredException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function gedDefault()
+    public function getDefault()
     {
         return $this->getEntity(self::RESOURCE_ID_DEFAULT);
+    }
+
+    /**
+     * @param string $name
+     * @param string $fromCommitId
+     * @param string $message
+     *
+     * @return Entity\Branch
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \whotrades\BitbucketApi\Exception\JsonInvalidException
+     * @throws \whotrades\BitbucketApi\Exception\ResourceIdRequiredException
+     */
+    public function create($name, $fromCommitId, $message)
+    {
+        $parameters = [
+            'name' => $name,
+            'startPoint' => $fromCommitId,
+            'message' => $message,
+        ];
+
+        $url = $this->getPath(null, $useResourceId = false);
+
+        $response = $this->sendRequest($url, 'POST', $parameters);
+
+        $entityClass = $this->getEntityClass();
+
+        return new $entityClass($response);
     }
 
     /**

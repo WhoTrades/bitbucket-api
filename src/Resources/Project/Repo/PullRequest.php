@@ -100,7 +100,7 @@ class PullRequest extends Base
      * @param string $toBranch
      * @param array $reviewers // [userNameOne, userNameTwo, ...]
      *
-     * @return bool
+     * @return Entity\PullRequest
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \whotrades\BitbucketApi\Exception\JsonInvalidException
