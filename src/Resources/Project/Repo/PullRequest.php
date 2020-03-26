@@ -57,13 +57,13 @@ class PullRequest extends Base
     /**
      * @param string $branch
      *
-     * @return Entity\Base[]
+     * @return Entity\PullRequest[]
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \whotrades\BitbucketApi\Exception\JsonInvalidException
      * @throws \whotrades\BitbucketApi\Exception\ResourceIdRequiredException
      */
-    public function getListByBranch($branch)
+    public function getListBySourceBranch($branch)
     {
         $parameters = [
             'at' => "refs/heads/{$branch}",
@@ -76,11 +76,30 @@ class PullRequest extends Base
     /**
      * @param string $branch
      *
+     * @return Entity\PullRequest[]
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \whotrades\BitbucketApi\Exception\JsonInvalidException
+     * @throws \whotrades\BitbucketApi\Exception\ResourceIdRequiredException
+     */
+    public function getListByDestinationBranch($branch)
+    {
+        $parameters = [
+            'at' => "refs/heads/{$branch}",
+            'direction' => self::DIRECTION_INCOMING,
+        ];
+
+        return $this->getList($parameters);
+    }
+
+    /**
+     * @param string $branch
+     *
      * @return bool
      */
     public function isConflicted($branch)
     {
-        $pullRequestList = $this->getListByBranch($branch);
+        $pullRequestList = $this->getListBySourceBranch($branch);
 
         $conflicted = false;
         /** @var \whotrades\BitbucketApi\Entity\PullRequest $pullRequest */
@@ -144,6 +163,24 @@ class PullRequest extends Base
         $entityClass = $this->getEntityClass();
 
         return new $entityClass($response);
+    }
+
+    /**
+     * @param $version
+     *
+     * @return void
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \whotrades\BitbucketApi\Exception\JsonInvalidException
+     * @throws \whotrades\BitbucketApi\Exception\ResourceIdRequiredException
+     */
+    public function delete($version)
+    {
+        $parameters = ['version' => $version];
+
+        $url = $this->getPath();
+
+        $this->sendRequest($url, 'DELETE', $parameters);
     }
 
     /**
