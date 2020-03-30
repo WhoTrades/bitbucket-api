@@ -234,6 +234,18 @@ class PullRequest extends Base
     }
 
     /**
+     * @return string | null
+     */
+    public function getLinkToDiffPage()
+    {
+        if (!$this->getSelfLink()) {
+            return $this->getSelfLink();
+        }
+
+        return $this->getSelfLink() . '/diff';
+    }
+
+    /**
      * @return User[]
      */
     public function getNeedsWorkUserList()
