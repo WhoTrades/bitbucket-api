@@ -9,6 +9,7 @@ use \whotrades\BitbucketApi\Entity;
 use \whotrades\BitbucketApi\Exception;
 use \whotrades\BitbucketApi\Response\ResponseFile;
 use \whotrades\BitbucketApi\Response\ResponseDirectory;
+use whotrades\BitbucketApi\Resources\Project\Repo;
 
 class Browser extends Base
 {
@@ -84,6 +85,35 @@ class Browser extends Base
 
         return new Entity\Browser\Directory(['path' => $response->getPath(), 'children' => $children]);
     }
+
+    /**
+     * @param string $path
+     * @param string $branch
+     *
+     * @return Entity\Commit
+     *
+     * @throws Exception\JsonInvalidException
+     * @throws Exception\ResourceIdRequiredException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getLastCommit($path, $branch = null)
+    {
+        $url = $this->getPath($path);
+        $parameters = ['blame' => true, 'noContent' => true];
+        if ($branch) {
+            $parameters['at'] = "refs/heads/{$branch}";
+        }
+
+        $response = $this->sendRequest($url, 'GET', $parameters);
+
+        $commitId = $response[0]['commitId'];
+
+        /** @var Repo $repo */
+        $repo = $this->parentResource;
+
+        return $repo->getCommit()->getEntity($commitId);
+    }
+
 
     /**
      * {@inheritdoc}
