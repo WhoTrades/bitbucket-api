@@ -2,6 +2,8 @@
 /**
  * @author Anton Gorlanov <antonxacc@gmail.com>
  */
+declare(strict_types=1);
+
 namespace whotrades\BitbucketApi\Entity\PullRequest;
 
 use \whotrades\BitbucketApi\Entity;
@@ -14,22 +16,18 @@ class Activity extends Entity\Base
     const ACTION_NEED_WORK = 'REVIEWED';
     const ACTION_APPROVED = 'APPROVED';
     const ACTION_RESCOPED = 'RESCOPED';
+    const ACTION_COMMENTED = 'COMMENTED';
 
+    /** @var int */
     protected $id;
-    /**
-     * @var DateTime
-     */
+    /** @var DateTime */
     protected $createdDateTime;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $action;
-
-    /**
-     * @var Entity\User
-     */
+    /** @var Entity\User */
     protected $user;
+    /** @var Comment|null */
+    protected $comment;
 
     /**
      * {@inheritdoc}
@@ -40,6 +38,9 @@ class Activity extends Entity\Base
         $this->createdDateTime = $this->createDateTimeByMillisecond($data['createdDate']);
         $this->action = $data['action'];
         $this->user = new Entity\User($data['user']);
+        if ($this->action === self::ACTION_COMMENTED) {
+            $this->comment = new Comment($data['comment']);
+        }
     }
 
     /**
@@ -61,7 +62,7 @@ class Activity extends Entity\Base
     /**
      * @return DateTime
      */
-    public function getCreatedDateTime()
+    public function getCreatedDateTime(): DateTime
     {
         return $this->createdDateTime;
     }
@@ -72,5 +73,13 @@ class Activity extends Entity\Base
     public function getUser(): Entity\User
     {
         return $this->user;
+    }
+
+    /**
+     * @return Comment|null
+     */
+    public function getComment(): ?Comment
+    {
+        return $this->comment;
     }
 }
