@@ -24,6 +24,9 @@ class Comment extends Base
      */
     public function getList($parameters = null): array
     {
+        // ag: It is impossible to get all comments of pull request via this resource with empty filter
+        // https://community.atlassian.com/t5/Bitbucket-questions/Retrieving-comments-from-Bitbucket-server-via-REST-API/qaq-p/282253
+        // Use activity resource for it
         if ($parameters === null) {
             $commentList = [];
             /** @var EntityActivity $activity */
