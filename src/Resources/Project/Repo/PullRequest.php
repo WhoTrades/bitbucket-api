@@ -6,6 +6,7 @@ namespace whotrades\BitbucketApi\Resources\Project\Repo;
 
 use \whotrades\BitbucketApi\Resources\Base;
 use \whotrades\BitbucketApi\Entity;
+use \whotrades\BitbucketApi\Exception;
 
 class PullRequest extends Base
 {
@@ -47,11 +48,23 @@ class PullRequest extends Base
     }
 
     /**
+     * @param string | null $userSlug
+     *
      * @return PullRequest\Participant
      */
-    public function getParticipant()
+    public function getParticipant($userSlug = null)
     {
-        return new PullRequest\Participant($this->client, null, $this);
+        return new PullRequest\Participant($this->client, $userSlug, $this);
+    }
+
+    /**
+     * @param string | null $commentId
+     *
+     * @return PullRequest\Comment
+     */
+    public function getComment($commentId = null)
+    {
+        return new PullRequest\Comment($this->client, $commentId, $this);
     }
 
     /**
@@ -93,20 +106,33 @@ class PullRequest extends Base
     }
 
     /**
+     * @return bool
+     */
+    public function isConflicted(): bool
+    {
+        if ($this->resourceId === null) {
+            throw new Exception\ResourceIdRequiredException(static::class);
+        }
+
+        /** @var \whotrades\BitbucketApi\Entity\PullRequest\Merge $mergeEntity */
+        $mergeEntity = $this->parentResource->getPullRequest($this->resourceId)->getMerge()->getEntity();
+
+        return $mergeEntity->isConflicted();
+    }
+
+    /**
      * @param string $branch
      *
      * @return bool
      */
-    public function isConflicted($branch)
+    public function isConflictedByBranch($branch)
     {
         $pullRequestList = $this->getListBySourceBranch($branch);
 
         $conflicted = false;
         /** @var \whotrades\BitbucketApi\Entity\PullRequest $pullRequest */
         foreach ($pullRequestList as $pullRequest) {
-            /** @var \whotrades\BitbucketApi\Entity\PullRequest\Merge $mergeEntity */
-            $mergeEntity = $this->parentResource->getPullRequest($pullRequest->getId())->getMerge()->getEntity();
-            $conflicted = $conflicted || $mergeEntity->isConflicted();
+            $conflicted = $conflicted || $this->parentResource->getPullRequest($pullRequest->getId())->isConflicted();
         }
 
         return $conflicted;
