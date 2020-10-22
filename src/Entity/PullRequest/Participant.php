@@ -8,6 +8,10 @@ use \whotrades\BitbucketApi\Entity;
 
 class Participant extends Entity\Base
 {
+    const STATUS_APPROVED = 'APPROVED';
+    const STATUS_NEEDS_WORK = 'NEEDS_WORK';
+    const STATUS_UNAPPROVED = 'UNAPPROVED';
+
     /**
      * @var Entity\User
      */
