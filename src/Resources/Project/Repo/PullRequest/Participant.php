@@ -5,7 +5,7 @@
 namespace whotrades\BitbucketApi\Resources\Project\Repo\PullRequest;
 
 use \whotrades\BitbucketApi\Resources\Base;
-use \whotrades\BitbucketApi\Entity;
+use \whotrades\BitbucketApi\Entity\PullRequest\Participant as EntityParticipant;
 use \whotrades\BitbucketApi\Exception;
 
 class Participant extends Base
@@ -29,7 +29,7 @@ class Participant extends Base
      */
     public function setNeedsWork()
     {
-        $parameters = ['status' => 'NEEDS_WORK'];
+        $parameters = ['status' => EntityParticipant::STATUS_NEEDS_WORK];
         $this->sendRequest($this->getPath(), 'PUT', $parameters);
     }
 
@@ -38,6 +38,6 @@ class Participant extends Base
      */
     protected function getEntityClass()
     {
-        return Entity\PullRequest\Participant::class;
+        return EntityParticipant::class;
     }
 }

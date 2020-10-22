@@ -10,7 +10,9 @@ class PullRequest extends Base
 {
     use Traits\WithDateTimeTrait;
 
+    /** @deprecated It is moved to Participant */
     const STATUS_NEEDS_WORK = 'NEEDS_WORK';
+    /** @deprecated It is moved to Participant */
     const STATUS_APPROVED = 'APPROVED';
 
     protected $id;
@@ -253,7 +255,7 @@ class PullRequest extends Base
         $needsWorkUserList = [];
         /** @var PullRequest\Participant $reviewer */
         foreach ($this->getReviewers() as $reviewer) {
-            if ($reviewer->getStatus() === self::STATUS_NEEDS_WORK) {
+            if ($reviewer->getStatus() === PullRequest\Participant::STATUS_NEEDS_WORK) {
                 $needsWorkUserList[$reviewer->getUser()->getId()] = $reviewer->getUser();
             }
         }
