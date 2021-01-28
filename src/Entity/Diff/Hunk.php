@@ -2,7 +2,7 @@
 /**
  * @author Anton Gorlanov <antonxacc@gmail.com>
  */
-namespace whotrades\BitbucketApi\Entity\PullRequest\Diff;
+namespace whotrades\BitbucketApi\Entity\Diff;
 
 use whotrades\BitbucketApi\Entity;
 
