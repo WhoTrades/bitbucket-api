@@ -45,11 +45,27 @@ class Repo extends Base
     }
 
     /**
+     * @return Repo\Diff
+     */
+    public function getDiff()
+    {
+        return new Repo\Diff($this->client, null, $this);
+    }
+
+    /**
      * @return Repo\Compare\Commit
      */
     public function getCompareCommit()
     {
         return new Repo\Compare\Commit($this->client, null, $this);
+    }
+
+    /**
+     * @return Repo\Compare\Diff
+     */
+    public function getCompareDiff()
+    {
+        return new Repo\Compare\Diff($this->client, null, $this);
     }
 
     /**

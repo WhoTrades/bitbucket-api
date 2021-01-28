@@ -2,7 +2,7 @@
 /**
  * @author Anton Gorlanov <antonxacc@gmail.com>
  */
-namespace whotrades\BitbucketApi\Entity\PullRequest;
+namespace whotrades\BitbucketApi\Entity;
 
 use \whotrades\BitbucketApi\Entity;
 
