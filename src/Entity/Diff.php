@@ -26,7 +26,7 @@ class Diff extends Entity\Base
             function ($item) {
                 return new Diff\Hunk($item);
             },
-            $data['hunks']
+            $data['hunks'] ?? []
         );
         $this->fileComments = $data['fileComments'];
         $this->lineComments = $data['lineComments'];
