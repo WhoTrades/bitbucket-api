@@ -4,7 +4,7 @@
  */
 namespace whotrades\BitbucketApi\Resources;
 
-use \whotrades\BitbucketApi\Client;
+use whotrades\BitbucketApi\ClientInterface;
 use \whotrades\BitbucketApi\Response\ResponsePaged;
 use \whotrades\BitbucketApi\Exception;
 use \whotrades\BitbucketApi\Entity;
@@ -14,7 +14,7 @@ abstract class Base
     protected static $resourceBaseUrl = '';
 
     /**
-     * @var Client
+     * @var ClientInterface
      */
     protected $client;
 
@@ -29,11 +29,11 @@ abstract class Base
     protected $parentResource;
 
     /**
-     * @param Client $client
+     * @param ClientInterface $client
      * @param string | null $resourceId
      * @param Base | null $parentResource
      */
-    public function __construct(Client $client, $resourceId = null, Base $parentResource = null)
+    public function __construct(ClientInterface $client, $resourceId = null, Base $parentResource = null)
     {
         $this->client = $client;
         $this->resourceId = $resourceId;
