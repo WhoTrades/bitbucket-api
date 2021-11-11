@@ -10,7 +10,7 @@ use \GuzzleHttp\Client as HttpClient;
 use \GuzzleHttp\Exception\RequestException;
 use \whotrades\BitbucketApi\Exception;
 
-class Client
+class Client implements ClientInterface
 {
     const HTTP_TIMEOUT = 90;
 
@@ -65,7 +65,7 @@ class Client
      * @throws Exception\JsonInvalidException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function sendRequest($url, $method, array $request)
+    public function sendRequest(string $url, string $method, array $request)
     {
         try {
             $options = [\GuzzleHttp\RequestOptions::CONNECT_TIMEOUT => $this->timeout];
