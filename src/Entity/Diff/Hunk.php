@@ -30,7 +30,7 @@ class Hunk extends Entity\Base
             function ($item) {
                 return new Segment($item);
             },
-            $data['segments']
+            $data['segments'] ?? []
         );
         $this->truncated = $data['truncated'];
     }
@@ -76,7 +76,7 @@ class Hunk extends Entity\Base
     }
 
     /**
-     * @return mixed
+     * @return Segment[]
      */
     public function getSegments()
     {

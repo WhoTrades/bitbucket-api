@@ -4,7 +4,7 @@
  */
 namespace whotrades\BitbucketApi\Entity;
 
-use \whotrades\BitbucketApi\Entity;
+use whotrades\BitbucketApi\Entity;
 
 class Diff extends Entity\Base
 {
@@ -14,6 +14,8 @@ class Diff extends Entity\Base
     protected $fileComments;
     protected $lineComments;
     protected $truncated;
+    private $addedLinesCount;
+    private $removedLinesCount;
 
     /**
      * {@inheritdoc}
@@ -79,5 +81,56 @@ class Diff extends Entity\Base
     public function getLineComments()
     {
         return $this->lineComments;
+    }
+
+    /**
+     * @return int
+     */
+    public function countAddedLines(): int
+    {
+        if ($this->addedLinesCount === null) {
+            $this->addedLinesCount = $this->countLinesByType(Diff\Segment::TYPE_ADDED);
+        }
+
+        return $this->addedLinesCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function countRemovedLines(): int
+    {
+        if ($this->removedLinesCount === null) {
+            $this->removedLinesCount = $this->countLinesByType(Diff\Segment::TYPE_REMOVED);
+        }
+
+        return $this->removedLinesCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function countAffectedLines(): int
+    {
+        return $this->countAddedLines() + $this->countRemovedLines();
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return int
+     */
+    private function countLinesByType(string $type): int
+    {
+        $count = 0;
+        foreach ($this->getHunks() as $hunk) {
+            foreach ($hunk->getSegments() as $segment) {
+                if ($segment->getType() === $type) {
+                    $count += count($segment->getLines());
+                }
+            }
+        }
+
+        return $count;
     }
 }
