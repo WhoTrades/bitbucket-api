@@ -26,7 +26,7 @@ class Commit extends CommitBase
      *
      * @throws Exception\MethodIsNotAcceptable
      */
-    public function getListByBranch($branch, $parameters = null)
+    public function getListByBranch(string $branch, array $parameters = null): array
     {
         throw new Exception\MethodIsNotAcceptable(__METHOD__);
     }

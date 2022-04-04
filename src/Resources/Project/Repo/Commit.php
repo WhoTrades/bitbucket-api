@@ -4,70 +4,92 @@
  */
 namespace whotrades\BitbucketApi\Resources\Project\Repo;
 
-use \whotrades\BitbucketApi\Resources\Base;
-use \whotrades\BitbucketApi\Entity;
+use Generator;
+use whotrades\BitbucketApi\Resources\Base;
+use whotrades\BitbucketApi\Entity;
+use GuzzleHttp\Exception\GuzzleException;
+use whotrades\BitbucketApi\Exception\JsonInvalidException;
+use whotrades\BitbucketApi\Exception\ResourceIdRequiredException;
 
 class Commit extends Base
 {
+    const DEFAULT_LIMIT = 100;
+
     protected static $resourceBaseUrl = 'commits';
 
     /**
-     * Get commits of branch without commits of merged branches
-     *
      * @param string $branch
      * @param array | null $parameters
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \whotrades\BitbucketApi\Exception\JsonInvalidException
-     * @throws \whotrades\BitbucketApi\Exception\ResourceIdRequiredException
-     *
      * @return Entity\Commit[]
+     *
+     * @throws GuzzleException
+     * @throws JsonInvalidException
+     * @throws ResourceIdRequiredException
      */
-    public function getListByBranch($branch, $parameters = null)
+    public function getListByBranch(string $branch, array $parameters = null): array
     {
         $parameters = $parameters ?? [];
+        $ref = "refs/heads/{$branch}";
 
-        // ag: Use parameters 'start' and 'limit' for final filtering
-        $limit = $parameters['limit'] ?? 10;
-        $start = $parameters['start'] ?? 0;
+        return $this->getListFromCommitId($ref, $parameters);
+    }
 
-        // ag: Set parameters 'start' and 'limit' for request
-        $parameters['limit'] = 100;
-        $parameters['start'] = 0;
+    /**
+     * @param string $commitId
+     * @param array | null $parameters
+     *
+     * @return Entity\Commit[]
+     *
+     * @throws GuzzleException
+     * @throws JsonInvalidException
+     * @throws ResourceIdRequiredException
+     */
+    public function getListFromCommitId(string $commitId, array $parameters = null): array
+    {
+        $parameters = $parameters ?? [];
+        $parameters['until'] = $commitId;
 
-        $parameters = array_merge($parameters, [
-            'until' => "refs/heads/{$branch}",
-        ]);
+        return $this->getList($parameters);
+    }
 
-        $result = [];
-        $lastCommitParentIdList = [];
-        $lastCommitJiraKey = null;
-        do {
-            $commitList = $this->getList($parameters);
+    /**
+     * @param string $branch
+     *
+     * @return Generator
+     *
+     * @throws GuzzleException
+     * @throws JsonInvalidException
+     * @throws ResourceIdRequiredException
+     */
+    public function getGeneratorByBranch(string $branch): Generator
+    {
+        $ref = "refs/heads/{$branch}";
 
-            /** @var \whotrades\BitbucketApi\Entity\Commit $commit */
-            foreach ($commitList as $commit) {
-                switch (true) {
-                    // ag: Add the head of branch
-                    case $lastCommitParentIdList === []:
-                    // ag: Find only parent
-                    case count($lastCommitParentIdList) === 1 && in_array($commit->getId(), $lastCommitParentIdList):
-                    // ag: Last commit was merged. Skip commit from merged branch
-                    case in_array($commit->getId(), $lastCommitParentIdList) && $commit->getJiraKey() !== $lastCommitJiraKey:
-                        $result[] = $commit;
-                        $lastCommitParentIdList = array_map(
-                            function (\whotrades\BitbucketApi\Entity\Commit\Base $item) {
-                                return $item->getId();
-                            },
-                            $commit->getParents()
-                        );
-                        $lastCommitJiraKey = $commit->getJiraKey();
-                }
-            }
-            $parameters['start'] += $parameters['limit'];
-        } while (count($result) < ($start + $limit) && count($commitList) > 0);
+        yield from $this->getGeneratorFromCommitId($ref);
+    }
 
-        return array_slice($result, $start, $limit);
+    /**
+     * @param string $branch
+     *
+     * @return Generator
+     *
+     * @throws GuzzleException
+     * @throws JsonInvalidException
+     * @throws ResourceIdRequiredException
+     */
+    public function getGeneratorFromCommitId(string $fromCommitId): Generator
+    {
+        $parameters['limit'] = self::DEFAULT_LIMIT;
+
+        $commitList = $this->getListFromCommitId($fromCommitId, $parameters);
+        if (count($commitList) < self::DEFAULT_LIMIT) {
+            yield from $commitList;
+        } else {
+            $lastCommit = array_pop($commitList);
+            yield from $commitList;
+            yield from $this->getListFromCommitId($lastCommit->getId(), $parameters);
+        }
     }
 
     /**
