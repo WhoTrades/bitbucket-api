@@ -6,7 +6,7 @@ namespace whotrades\BitbucketApi\Entity;
 
 use whotrades\BitbucketApi\Entity\Commit\Committer;
 use whotrades\BitbucketApi\Entity\Commit\Base as CommitBase;
-use \DateTime;
+use DateTime;
 
 class Commit extends CommitBase
 {
@@ -105,6 +105,23 @@ class Commit extends CommitBase
     public function getParents()
     {
         return $this->parents;
+    }
+
+    /**
+     * @param string $commitId
+     *
+     * @return bool
+     */
+    public function isParentId(string $commitId): bool
+    {
+        $parentIdList = array_map(
+            function (CommitBase $commit) {
+                return $commit->getId();
+            },
+            $this->getParents()
+        );
+
+        return in_array($commitId, $parentIdList);
     }
 
     /**
