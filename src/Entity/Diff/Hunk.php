@@ -21,7 +21,7 @@ class Hunk extends Entity\Base
      */
     protected function init($data)
     {
-        $this->context = $data['context'];
+        $this->context = $data['context'] ?? null;
         $this->sourceLine = $data['sourceLine'];
         $this->sourceSpan = $data['sourceSpan'];
         $this->destinationLine = $data['destinationLine'];
