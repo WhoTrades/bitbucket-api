@@ -22,7 +22,7 @@ class Line extends Entity\Base
         $this->source = $data['source'];
         $this->destination = $data['destination'];
         $this->line = $data['line'];
-        $this->conflictMarker = $data['conflictMarker'];
+        $this->conflictMarker = $data['conflictMarker'] ?? null;
         $this->truncated = $data['truncated'];
     }
 

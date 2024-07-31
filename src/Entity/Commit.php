@@ -56,7 +56,7 @@ class Commit extends CommitBase
             },
             $data['parents']
         );
-        $this->properties = $data['properties'];
+        $this->properties = $data['properties'] ?? null;
     }
 
     /**

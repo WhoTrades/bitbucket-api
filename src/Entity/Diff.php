@@ -30,8 +30,8 @@ class Diff extends Entity\Base
             },
             $data['hunks'] ?? []
         );
-        $this->fileComments = $data['fileComments'];
-        $this->lineComments = $data['lineComments'];
+        $this->fileComments = $data['fileComments'] ?? null;
+        $this->lineComments = $data['lineComments'] ?? null;
         $this->truncated = $data['truncated'];
     }
 

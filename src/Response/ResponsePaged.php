@@ -23,9 +23,9 @@ class ResponsePaged
         $this->size = $response['size'];
         $this->start = $response['start'];
         $this->limit = $response['limit'];
-        $this->filter = $response['filter'];
+        $this->filter = $response['filter'] ?? null;
         $this->isLastPage = $response['isLastPage'];
-        $this->nextPageStart = $response['nextPageStart'];
+        $this->nextPageStart = $response['nextPageStart'] ?? null;
     }
 
     /**

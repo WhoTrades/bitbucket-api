@@ -19,11 +19,11 @@ class Path extends Entity\Base
      */
     protected function init($data)
     {
-        $this->name = $data['name'];
-        $this->parent = $data['parent'];
-        $this->extension = $data['extension'];
-        $this->toString = $data['toString'];
-        $this->components = $data['components'];
+        $this->name = $data['name'] ?? null;
+        $this->parent = $data['parent'] ?? null;
+        $this->extension = $data['extension'] ?? null;
+        $this->toString = $data['toString'] ?? null;
+        $this->components = $data['components'] ?? null;
     }
 
     /**
